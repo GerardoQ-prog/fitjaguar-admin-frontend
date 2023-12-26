@@ -13,6 +13,9 @@ import NewDocumentPage from "../pages/new-document";
 import UsersPage from "../pages/users";
 import NewVideoPage from "../pages/new-video";
 import NewCoursePage from "../pages/new-course";
+import ActivationCodePage from "../pages/activaciton-code";
+import NewActivationCodePage from "../pages/new-code";
+import LandingPage from "../pages/landing";
 
 const AppRoutes = () => {
   const queryClient = new QueryClient();
@@ -35,6 +38,9 @@ const AppRoutes = () => {
             <Route path="/nuevo-curso" element={<NewCoursePage />} />
             <Route path="/usuarios" element={<UsersPage />} />
             <Route path="/nuevo-usuario" element={<UsersPage />} />
+            <Route path="/codigo-activacion" element={<ActivationCodePage />} />
+            <Route path="/nuevo-codigo" element={<NewActivationCodePage />} />
+            <Route path="/landing" element={<LandingPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

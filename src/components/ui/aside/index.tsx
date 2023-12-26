@@ -90,6 +90,33 @@ const Aside = () => {
         location.pathname.includes("/nuevo-documento"),
       path: "/recursos",
     },
+    {
+      name: "Codigos de activación",
+      icon: (
+        <FlashIcon
+          fill={
+            location.pathname.includes("/codigo-activacion") ||
+            location.pathname.includes("/nuevo-codigo")
+              ? "#FEC600"
+              : "#C6C6C6"
+          }
+        />
+      ),
+      active:
+        location.pathname.includes("/codigo-activacion") ||
+        location.pathname.includes("/nuevo-codigo"),
+      path: "/codigo-activacion",
+    },
+    {
+      name: "Landing",
+      icon: (
+        <FlashIcon
+          fill={location.pathname.includes("landing") ? "#FEC600" : "#C6C6C6"}
+        />
+      ),
+      active: location.pathname.includes("/landing"),
+      path: "/landing",
+    },
   ];
 
   return (

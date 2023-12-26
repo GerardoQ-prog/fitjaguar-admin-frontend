@@ -24,7 +24,7 @@ const FormNewDocument = () => {
     image: "",
     coach: "",
     pdf: "",
-    likes: 0,
+    likes: "",
     comments: [],
     typePhoto:
       "https://blog.fitjaguaracademygo.com/herramientasdelcoach/esencialesdelcrosstraining-0-0-0-0-0",
@@ -54,6 +54,7 @@ const FormNewDocument = () => {
       ...formDocument,
       slug: convertTextToSlug(formDocument.title),
       pdf: formDocument.pdf.trim(),
+      likes: Number(formDocument.likes),
     });
     console.log("response", response);
     navigate("/recursos");
@@ -153,10 +154,24 @@ const FormNewDocument = () => {
           onChange={handleChangeDescription}
           className="min-h-[300px]"
         />
-        <MDEditor.Markdown
+        {/* <MDEditor.Markdown
           source={formDocument.description}
           style={{ whiteSpace: "pre-wrap" }}
-        />
+        /> */}
+        <div className="flex gap-4">
+          <Input
+            label="Número de descargas"
+            name="visualizaciones"
+            value={0}
+            onChange={handleChangeFormDocument}
+          />
+          <Input
+            label="Número de likes"
+            name="likes"
+            value={formDocument.likes}
+            onChange={handleChangeFormDocument}
+          />
+        </div>
         <Button className="mt-5 w-full" onClick={createNewDocument}>
           Crear documento
         </Button>

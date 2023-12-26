@@ -32,7 +32,7 @@ const FormNewVideo = () => {
     coach: "",
     video: "",
     duration: "0",
-    likes: 0,
+    likes: "",
     comments: [],
     typePhoto:
       "https://blog.fitjaguaracademygo.com/herramientasdelcoach/esencialesdelcrosstraining-0-0-0-0-0",
@@ -61,6 +61,7 @@ const FormNewVideo = () => {
     const response = await mutation.mutateAsync({
       ...formVideo,
       slug: convertTextToSlug(formVideo.title),
+      likes: Number(formVideo.likes),
     });
     console.log("response", response);
     navigate("/recursos");
@@ -180,10 +181,24 @@ const FormNewVideo = () => {
           onChange={handleChangeDescription}
           className="min-h-[300px]"
         />
-        <MDEditor.Markdown
+        {/* <MDEditor.Markdown
           source={formVideo.description}
           style={{ whiteSpace: "pre-wrap" }}
-        />
+        /> */}
+        <div className="flex gap-4">
+          <Input
+            label="Número de visualizaciones"
+            name="visualizaciones"
+            value={0}
+            onChange={handleChangeFormVideo}
+          />
+          <Input
+            label="Número de likes"
+            name="likes"
+            value={formVideo.likes}
+            onChange={handleChangeFormVideo}
+          />
+        </div>
         <Button className="mt-5 w-full" onClick={createNewDocument}>
           Crear video
         </Button>
