@@ -8,7 +8,7 @@ const Aside = () => {
 
   const menu = [
     {
-      name: "Dashboard",
+      name: "Dashboardx",
       icon: (
         <DashboardIcon
           fill={
