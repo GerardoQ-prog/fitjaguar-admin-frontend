@@ -1,15 +1,17 @@
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  colors?: string;
 }
 const Button: React.FC<IButtonProps> = ({
   children,
   className = "",
+  colors = "bg-primary text-black",
   ...rest
 }) => {
   return (
     <button
       type="button"
-      className={`${className} bg-primary text-black font-bold max-h-[50px] p-3 rounded-[10px] border-none outline-none text-base`}
+      className={`${className} ${colors} w-full font-bold max-h-[50px] p-3 rounded-[10px] border-none outline-none text-base`}
       {...rest}
     >
       {children}

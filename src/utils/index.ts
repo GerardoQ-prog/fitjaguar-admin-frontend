@@ -29,3 +29,34 @@ export const convertSecondstoMinutesAndSeconds = (seconds: number) => {
 
   return minutos + ":" + segundosRestantes;
 };
+
+export const capitalizeFullName = (fullName: string) => {
+  const words = fullName.split(" ");
+  const capitalizedWords = words.map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
+  return capitalizedWords.join(" ");
+};
+
+export const generateCode = (name: string, amount: string): string => {
+  const codeBase = name.replace(/\s+/g, "").toUpperCase();
+  const randomNumber = Math.floor(Math.random() * 1000);
+  const code = codeBase + randomNumber.toString() + amount;
+  return code;
+};
+
+export const getHoursAndMinutes = (dateFormat: string) => {
+  const date = new Date(dateFormat);
+  const localHours = date.getHours();
+  const localMinutes = date.getMinutes();
+  return `${localHours}:${localMinutes}`;
+};
+
+export const getFormattedDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};

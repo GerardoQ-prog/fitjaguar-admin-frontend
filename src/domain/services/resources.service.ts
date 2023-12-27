@@ -8,11 +8,30 @@ export const resourcesService = {
     const response = resourcesRepository.createNewVideo(newVideo);
     return response;
   },
+  updateVideo: (newVideo: any) => {
+    const response = resourcesRepository.updateVideo(newVideo);
+    return response;
+  },
+  deleteVideo: (id: string) => {
+    const response = resourcesRepository.deleteVideo(id);
+    return response;
+  },
   getDocuments: () => {
     return resourcesRepository.getDocuments();
   },
+  getDocumentById: (id: string) => {
+    return resourcesRepository.getDocumentById(id);
+  },
   createNewDocument: (newDocument: any) => {
     const response = resourcesRepository.createNewDocument(newDocument);
+    return response;
+  },
+  updateDocument: (newDocument: any) => {
+    const response = resourcesRepository.updateDocument(newDocument);
+    return response;
+  },
+  deleteDocument: (id: string) => {
+    const response = resourcesRepository.deleteDocument(id);
     return response;
   },
 };

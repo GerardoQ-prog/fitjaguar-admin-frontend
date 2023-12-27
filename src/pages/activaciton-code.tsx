@@ -13,6 +13,7 @@ const ActivationCodePage = () => {
           <Button>Nuevo código</Button>
         </Link>
       </div>
+      <br />
       <TableCodes />
     </main>
   );

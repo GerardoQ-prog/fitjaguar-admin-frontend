@@ -8,7 +8,7 @@ const Aside = () => {
 
   const menu = [
     {
-      name: "Dashboardx",
+      name: "Dashboard",
       icon: (
         <DashboardIcon
           fill={
@@ -74,7 +74,7 @@ const Aside = () => {
       path: "/cursos",
     },
     {
-      name: "Recursos",
+      name: "Recursos Gratuitos",
       icon: (
         <FlashIcon
           fill={

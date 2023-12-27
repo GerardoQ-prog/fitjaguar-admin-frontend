@@ -1,85 +1,166 @@
-import React, { useState } from "react";
 import Input from "../../ui/input";
 import Select from "../../ui/select";
 import Button from "../../ui/button";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { validationFormNewCode } from "../../../utils/validations/code";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetStatusPayment } from "../../../domain/hooks/use-get-status-payment";
+import { useGetTypePayment } from "../../../domain/hooks/use-get-type-payment";
+import { countries } from "../../../utils/data/countries";
+import { useCreateNewCode } from "../../../domain/hooks/use-create-new-code";
+import { generateCode } from "../../../utils";
+import { useUpdateCode } from "../../../domain/hooks/use-update-code";
 
-const FormNewCode = () => {
-  const [formCode, setFormCode] = useState({
-    asesor: "",
-    email: "",
-    typePayment: "",
-    country: "",
-    amount: "",
-    code: "",
-    descargo: "",
+interface IFormNewCodeProps {
+  data?: any;
+}
+
+type FormNewCodeValues = {
+  adviser: string;
+  email: string;
+  typePayment: string;
+  statusPayment: string;
+  country: string;
+  amount: string;
+  code: string;
+  discharge: string;
+};
+
+const FormNewCode: React.FC<IFormNewCodeProps> = ({ data }) => {
+  let { id } = useParams();
+  const navigate = useNavigate();
+  const { data: dataStatusPayment } = useGetStatusPayment();
+  const { data: dataTypePayment } = useGetTypePayment();
+  const mutation = useCreateNewCode();
+  const mutationUpdate = useUpdateCode();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    watch,
+    setValue,
+  } = useForm<FormNewCodeValues>({
+    mode: "onChange",
+    defaultValues: data
+      ? {
+          adviser: data.adviser,
+          email: data.email,
+          typePayment: data.typePayment?._id,
+          statusPayment: data.statusPayment?._id,
+          country: data.country,
+          amount: data.amount,
+          code: data.code,
+          discharge: data.discharge,
+        }
+      : {
+          adviser: "Gerardo Quispe",
+        },
   });
 
-  const handleChangeFormCode = (e: any) => {
-    setFormCode({
-      ...formCode,
-      [e.target.name]: e.target.value,
-    });
+  const createNewCode: SubmitHandler<FormNewCodeValues> = async (dataForm) => {
+    if (id) {
+      await mutationUpdate.mutateAsync({
+        ...dataForm,
+        _id: data._id,
+      });
+    } else {
+      await mutation.mutateAsync(dataForm);
+    }
+  };
+
+  const generateCodeForm = () => {
+    const code = generateCode(watch("adviser"), watch("amount"));
+    setValue("code", code);
   };
 
   return (
-    <div>
-      <div className="grid grid-cols-3 gap-2 items-center">
+    <form onSubmit={handleSubmit(createNewCode)}>
+      <div className="grid grid-cols-3 gap-2 items-start">
         <Input
           label="Nombre de asesor"
-          name="asesor"
-          value={formCode.asesor}
-          onChange={handleChangeFormCode}
+          register={register}
+          error={errors.adviser}
+          id="adviser"
+          rules={validationFormNewCode.rulesName}
+          disabled
         />
         <Input
           label="Email de usuario"
-          name="email"
-          value={formCode.asesor}
-          onChange={handleChangeFormCode}
+          register={register}
+          error={errors.email}
+          id="email"
+          rules={validationFormNewCode.rulesEmail}
         />
-        <Select
-          label="País"
-          options={[]}
-          value={formCode.typePayment}
-          onChange={handleChangeFormCode}
-          name="typePayment"
+        <Controller
+          control={control}
+          name="country"
+          rules={validationFormNewCode.rulesCountry}
+          render={({ field }) => (
+            <Select
+              label="País"
+              options={countries ? countries : []}
+              error={errors.country}
+              {...field}
+            />
+          )}
         />
-        <Select
-          label="Tipo de pago"
-          options={[]}
-          value={formCode.typePayment}
-          onChange={handleChangeFormCode}
+        <Controller
+          control={control}
           name="typePayment"
+          rules={validationFormNewCode.rulesTypePayment}
+          render={({ field }) => (
+            <Select
+              label="Tipo de pago"
+              options={dataTypePayment ? dataTypePayment : []}
+              error={errors.typePayment}
+              {...field}
+            />
+          )}
         />
-        <Select
-          label="Estado de cobro"
-          options={[]}
-          value={formCode.typePayment}
-          onChange={handleChangeFormCode}
-          name="typePayment"
+        <Controller
+          control={control}
+          name="statusPayment"
+          rules={validationFormNewCode.rulesStatusPayment}
+          render={({ field }) => (
+            <Select
+              label="Estado de pago"
+              options={dataStatusPayment ? dataStatusPayment : []}
+              error={errors.statusPayment}
+              {...field}
+            />
+          )}
         />
         <Input
-          label="Monto"
-          name="amount"
-          value={formCode.amount}
-          onChange={handleChangeFormCode}
+          label="Monto (USD)"
+          register={register}
+          error={errors.amount}
+          id="amount"
+          rules={validationFormNewCode.rulesAmount}
         />
         <Input
           label="Codigo"
-          name="code"
-          value={formCode.code}
-          onChange={handleChangeFormCode}
+          register={register}
+          error={errors.code}
+          id="code"
+          rules={validationFormNewCode.rulesCode}
+          disabled
         />
-        <Button className="mt-7">Generar código</Button>
+        <Button className="mt-7" onClick={generateCodeForm}>
+          Generar código
+        </Button>
       </div>
       <Input
         label="Descargo"
-        name="descargo"
-        value={formCode.descargo}
-        onChange={handleChangeFormCode}
+        register={register}
+        error={errors.discharge}
+        id="discharge"
+        rules={validationFormNewCode.rulesDischarge}
       />
       <br />
-      <Button>Crear código</Button>
-    </div>
+      <Button type="submit">Crear código</Button>
+    </form>
   );
 };
 

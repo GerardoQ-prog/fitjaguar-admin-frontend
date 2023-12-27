@@ -16,9 +16,18 @@ import NewCoursePage from "../pages/new-course";
 import ActivationCodePage from "../pages/activaciton-code";
 import NewActivationCodePage from "../pages/new-code";
 import LandingPage from "../pages/landing";
+import RoadSlugPage from "../pages/road-slug";
+import DocumentIdPage from "../pages/document-id";
 
 const AppRoutes = () => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -30,9 +39,14 @@ const AppRoutes = () => {
             <Route path="/entrenadores" element={<CoachesPage />} />
             <Route path="/nuevo-entrenador" element={<NewCoachPage />} />
             <Route path="/recursos" element={<ResourcesPage />} />
+            <Route
+              path="/recursos/documento/:id"
+              element={<DocumentIdPage />}
+            />
             <Route path="/nuevo-documento" element={<NewDocumentPage />} />
             <Route path="/nuevo-video" element={<NewVideoPage />} />
             <Route path="/rutas" element={<RoadsPage />} />
+            <Route path="/rutas/:slug" element={<RoadSlugPage />} />
             <Route path="/nueva-ruta" element={<NewRoadPage />} />
             <Route path="/cursos" element={<CoursesPage />} />
             <Route path="/nuevo-curso" element={<NewCoursePage />} />
