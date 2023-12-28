@@ -6,6 +6,7 @@ export const resourcesService = {
   },
   createNewVideo: (newVideo: any) => {
     const response = resourcesRepository.createNewVideo(newVideo);
+    console.log("response", response);
     return response;
   },
   updateVideo: (newVideo: any) => {
@@ -24,6 +25,7 @@ export const resourcesService = {
   },
   createNewDocument: (newDocument: any) => {
     const response = resourcesRepository.createNewDocument(newDocument);
+    console.log("response", response);
     return response;
   },
   updateDocument: (newDocument: any) => {

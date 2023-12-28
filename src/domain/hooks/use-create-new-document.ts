@@ -4,7 +4,9 @@ import { resourcesService } from "../services/resources.service";
 export const useCreateNewDocument = () => {
   return useMutation({
     mutationFn: (newDocument: any) => {
-      return resourcesService.createNewDocument(newDocument);
+      const algo = resourcesService.createNewDocument(newDocument);
+      console.log(algo);
+      return algo;
     },
   });
 };

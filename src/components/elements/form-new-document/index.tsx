@@ -22,6 +22,7 @@ interface IFormNewDocumentProps {
 
 type FormNewDocumentValues = {
   title: string;
+  slug: string;
   road: string;
   description: string;
   image: string;
@@ -29,6 +30,7 @@ type FormNewDocumentValues = {
   pdf: string;
   likes: string;
   downloads: string;
+  comments: [];
 };
 
 const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
@@ -50,16 +52,21 @@ const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
     setValue,
   } = useForm<FormNewDocumentValues>({
     mode: "onChange",
-    defaultValues: data && {
-      title: data.title,
-      description: data.description,
-      image: data.image,
-      road: data.road?._id || "",
-      coach: data.coach?._id || "",
-      pdf: data.pdf,
-      likes: data.likes,
-      downloads: data.downloads,
-    },
+    defaultValues: data
+      ? {
+          title: data.title,
+          description: data.description,
+          image: data.image,
+          road: data.road?._id || "",
+          coach: data.coach?._id || "",
+          pdf: data.pdf,
+          likes: data.likes,
+          downloads: data.downloads,
+          comments: [],
+        }
+      : {
+          comments: [],
+        },
   });
 
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
@@ -72,13 +79,14 @@ const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
     dataForm
   ) => {
     if (!id) {
-      await mutation.mutateAsync({
+      const algo = await mutation.mutateAsync({
         ...dataForm,
         slug: convertTextToSlug(dataForm.title),
         pdf: dataForm.pdf.trim(),
         likes: Number(dataForm.likes),
         downloads: Number(dataForm.downloads),
       });
+      console.log("algo", algo);
     } else {
       await mutationUpdate.mutateAsync(
         {

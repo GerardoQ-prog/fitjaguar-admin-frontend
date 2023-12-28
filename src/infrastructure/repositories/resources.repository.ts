@@ -32,6 +32,7 @@ export const resourcesRepository = {
       "/document-file",
       JSON.stringify(newDocument)
     );
+    console.log(response);
     return response;
   },
   updateDocument: async (newDocument: any) => {

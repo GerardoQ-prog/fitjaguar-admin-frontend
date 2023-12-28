@@ -14,9 +14,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
 import ReactPlayer from "react-player";
 import { useCreateNewVideo } from "../../../domain/hooks/use-create-new-video";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import InputFile from "../../ui/input-file";
 import { validationFormNewVideo } from "../../../utils/validations/video";
+
+interface IFormNewVideoProps {
+  data?: any;
+}
 
 type FormNewVideoValues = {
   title: string;
@@ -29,9 +33,10 @@ type FormNewVideoValues = {
   duration: string;
   likes: string;
   visualizations: string;
+  comments: any[];
 };
 
-const FormNewVideo = () => {
+const FormNewVideo: React.FC<IFormNewVideoProps> = ({ data }) => {
   let { id } = useParams();
   const navigate = useNavigate();
   const { data: dataRoads } = useGetRoads();
@@ -45,41 +50,37 @@ const FormNewVideo = () => {
     control,
     watch,
     setValue,
-  } = useForm<FormNewVideoValues>({});
-
-  const [formVideo, setFormVideo] = useState({
-    title: "",
-    slug: "",
-    road: "",
-    description: "",
-    miniature: "",
-    coach: "",
-    video: "",
-    duration: "0",
-    likes: "",
+  } = useForm<FormNewVideoValues>({
+    defaultValues: data
+      ? {
+          title: data.title,
+          slug: data.slug,
+          road: data.road?._id || "",
+          description: data.description,
+          miniature: data.miniature,
+          coach: data.coach?._id || "",
+          video: data.video,
+          duration: data.duration,
+          likes: data.like,
+          visualizations: data.visualizations,
+          comments: [],
+        }
+      : {
+          comments: [],
+        },
   });
-
-  const handleChangeFormVideo = (e: any) => {
-    setFormVideo({
-      ...formVideo,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleChangePhoto = (base64: string) => {
     setValue("miniature", base64);
   };
 
-  const handleChangeInputFile = (e: any) => {
-    const file = e.target.files[0];
-    convertFileToImageBase64(file, handleChangePhoto);
-  };
-
-  const createNewDocument = async () => {
+  const createNewDocument: SubmitHandler<FormNewVideoValues> = async (
+    dataForm
+  ) => {
     const response = await mutation.mutateAsync({
-      ...formVideo,
-      slug: convertTextToSlug(formVideo.title),
-      likes: Number(formVideo.likes),
+      ...dataForm,
+      slug: convertTextToSlug(dataForm.title),
+      likes: Number(dataForm.likes),
     });
     navigate("/recursos");
   };
@@ -89,67 +90,17 @@ const FormNewVideo = () => {
   };
 
   const handleChangeDuration = (duration: number) => {
-    setFormVideo({
-      ...formVideo,
-      duration: convertSecondstoMinutesAndSeconds(duration),
-    });
+    setValue("duration", convertSecondstoMinutesAndSeconds(duration));
   };
 
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit(createNewDocument)}>
         <div className="w-full flex gap-10">
           <InputFile
             image={watch("miniature")}
             handleChangeImage={handleChangePhoto}
           />
-          <div className="w-full">
-            <label className="font-bold">Ingresar foto</label>
-            {formVideo.miniature === "" ? (
-              <div className="flex items-center justify-center w-full">
-                <label
-                  htmlFor="dropzone-file"
-                  className="flex flex-col items-center justify-center w-full h-64 border border-white rounded-lg cursor-pointer bg-black-300"
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <MoreIcon />
-                    <p className=" text-white font-bold">Agregar foto</p>
-                  </div>
-                  <input
-                    id="dropzone-file"
-                    type="file"
-                    className="hidden"
-                    onChange={handleChangeInputFile}
-                  />
-                </label>
-              </div>
-            ) : (
-              <div>
-                <img
-                  src={formVideo.miniature}
-                  alt="Archivo seleccionado"
-                  className="w-full object-contain"
-                />
-                <div className="flex items-center justify-center w-full mt-5">
-                  <label
-                    htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center w-full h-20 border border-white rounded-lg cursor-pointer bg-black-300"
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <MoreIcon />
-                      <p className=" text-white font-bold">Agregar foto</p>
-                    </div>
-                    <input
-                      id="dropzone-file"
-                      type="file"
-                      className="hidden"
-                      onChange={handleChangeInputFile}
-                    />
-                  </label>
-                </div>
-              </div>
-            )}
-          </div>
           <div className="w-full flex flex-col gap-2">
             <Input
               label="Ingrese link del video"
@@ -168,7 +119,7 @@ const FormNewVideo = () => {
             />
             <br />
             <ReactPlayer
-              url={formVideo.video}
+              url={watch("video")}
               controls
               onDuration={handleChangeDuration}
             />
@@ -230,7 +181,7 @@ const FormNewVideo = () => {
               rules={validationFormNewVideo.rulesLikes}
             />
           </div>
-          <Button className="mt-5 w-full" onClick={createNewDocument}>
+          <Button className="mt-5 w-full" type="submit">
             {id ? "Actualizar video" : "Crear video"}
           </Button>
           {id && (
