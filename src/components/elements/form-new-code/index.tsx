@@ -10,6 +10,10 @@ import { countries } from "../../../utils/data/countries";
 import { useCreateNewCode } from "../../../domain/hooks/use-create-new-code";
 import { generateCode } from "../../../utils";
 import { useUpdateCode } from "../../../domain/hooks/use-update-code";
+import ModalDelete from "../modal-delete";
+import { useState } from "react";
+import { useDeleteCode } from "../../../domain/hooks/use-delete-code";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface IFormNewCodeProps {
   data?: any;
@@ -33,6 +37,8 @@ const FormNewCode: React.FC<IFormNewCodeProps> = ({ data }) => {
   const { data: dataTypePayment } = useGetTypePayment();
   const mutation = useCreateNewCode();
   const mutationUpdate = useUpdateCode();
+  const mutationDelete = useDeleteCode();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -47,8 +53,8 @@ const FormNewCode: React.FC<IFormNewCodeProps> = ({ data }) => {
       ? {
           adviser: data.adviser,
           email: data.email,
-          typePayment: data.typePayment?._id,
-          statusPayment: data.statusPayment?._id,
+          typePayment: data.typePayment?._id || "",
+          statusPayment: data.statusPayment?._id || "",
           country: data.country,
           amount: data.amount,
           code: data.code,
@@ -59,14 +65,35 @@ const FormNewCode: React.FC<IFormNewCodeProps> = ({ data }) => {
         },
   });
 
+  const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
+
   const createNewCode: SubmitHandler<FormNewCodeValues> = async (dataForm) => {
     if (id) {
-      await mutationUpdate.mutateAsync({
-        ...dataForm,
-        _id: data._id,
-      });
+      await mutationUpdate.mutateAsync(
+        {
+          ...dataForm,
+          _id: data._id,
+        },
+        {
+          onSuccess: (dataResponse: any) => {
+            if (!dataResponse?.error) {
+              queryClient.setQueryData(["code-id", id], {
+                ...dataResponse,
+                typePayment: {
+                  _id: dataResponse.typePayment,
+                },
+                statusPayment: {
+                  _id: dataResponse.statusPayment,
+                },
+              });
+            }
+          },
+        }
+      );
+      navigate("/codigo-activacion");
     } else {
       await mutation.mutateAsync(dataForm);
+      navigate("/codigo-activacion");
     }
   };
 
@@ -75,92 +102,124 @@ const FormNewCode: React.FC<IFormNewCodeProps> = ({ data }) => {
     setValue("code", code);
   };
 
+  const deleteCode = async () => {
+    try {
+      await mutationDelete.mutateAsync(data._id);
+      navigate("/codigo-activacion");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(createNewCode)}>
-      <div className="grid grid-cols-3 gap-2 items-start">
+    <>
+      <form onSubmit={handleSubmit(createNewCode)}>
+        <div className="grid grid-cols-3 gap-2 items-start">
+          <Input
+            label="Nombre de asesor"
+            register={register}
+            error={errors.adviser}
+            id="adviser"
+            rules={validationFormNewCode.rulesName}
+            disabled
+          />
+          <Input
+            label="Email de usuario"
+            register={register}
+            error={errors.email}
+            id="email"
+            rules={validationFormNewCode.rulesEmail}
+            disabled={!!id}
+          />
+          <Controller
+            control={control}
+            name="country"
+            rules={validationFormNewCode.rulesCountry}
+            render={({ field }) => (
+              <Select
+                label="País"
+                options={countries ? countries : []}
+                error={errors.country}
+                {...field}
+                disabled={!!id}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="typePayment"
+            rules={validationFormNewCode.rulesTypePayment}
+            render={({ field }) => (
+              <Select
+                label="Tipo de pago"
+                options={dataTypePayment ? dataTypePayment : []}
+                error={errors.typePayment}
+                {...field}
+                disabled={!!id}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="statusPayment"
+            rules={validationFormNewCode.rulesStatusPayment}
+            render={({ field }) => (
+              <Select
+                label="Estado de pago"
+                options={dataStatusPayment ? dataStatusPayment : []}
+                error={errors.statusPayment}
+                {...field}
+              />
+            )}
+          />
+          <Input
+            label="Monto (USD)"
+            register={register}
+            error={errors.amount}
+            id="amount"
+            rules={validationFormNewCode.rulesAmount}
+            disabled={!!id}
+          />
+          <Input
+            label="Codigo"
+            register={register}
+            error={errors.code}
+            id="code"
+            rules={validationFormNewCode.rulesCode}
+            disabled
+          />
+          <Button className="mt-7" onClick={generateCodeForm}>
+            Generar código
+          </Button>
+        </div>
         <Input
-          label="Nombre de asesor"
+          label="Descargo"
           register={register}
-          error={errors.adviser}
-          id="adviser"
-          rules={validationFormNewCode.rulesName}
-          disabled
+          error={errors.discharge}
+          id="discharge"
+          rules={validationFormNewCode.rulesDischarge}
         />
-        <Input
-          label="Email de usuario"
-          register={register}
-          error={errors.email}
-          id="email"
-          rules={validationFormNewCode.rulesEmail}
-        />
-        <Controller
-          control={control}
-          name="country"
-          rules={validationFormNewCode.rulesCountry}
-          render={({ field }) => (
-            <Select
-              label="País"
-              options={countries ? countries : []}
-              error={errors.country}
-              {...field}
-            />
+        <br />
+        <div className="flex gap-5">
+          <Button type="submit">
+            {id ? "Actualizar código" : "Crear código"}
+          </Button>
+          {id && (
+            <Button
+              colors="bg-red-600 text-white"
+              onClick={() => setOpenModalDelete(true)}
+            >
+              Eliminar código
+            </Button>
           )}
-        />
-        <Controller
-          control={control}
-          name="typePayment"
-          rules={validationFormNewCode.rulesTypePayment}
-          render={({ field }) => (
-            <Select
-              label="Tipo de pago"
-              options={dataTypePayment ? dataTypePayment : []}
-              error={errors.typePayment}
-              {...field}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="statusPayment"
-          rules={validationFormNewCode.rulesStatusPayment}
-          render={({ field }) => (
-            <Select
-              label="Estado de pago"
-              options={dataStatusPayment ? dataStatusPayment : []}
-              error={errors.statusPayment}
-              {...field}
-            />
-          )}
-        />
-        <Input
-          label="Monto (USD)"
-          register={register}
-          error={errors.amount}
-          id="amount"
-          rules={validationFormNewCode.rulesAmount}
-        />
-        <Input
-          label="Codigo"
-          register={register}
-          error={errors.code}
-          id="code"
-          rules={validationFormNewCode.rulesCode}
-          disabled
-        />
-        <Button className="mt-7" onClick={generateCodeForm}>
-          Generar código
-        </Button>
-      </div>
-      <Input
-        label="Descargo"
-        register={register}
-        error={errors.discharge}
-        id="discharge"
-        rules={validationFormNewCode.rulesDischarge}
+        </div>
+      </form>
+      <ModalDelete
+        isOpen={openModalDelete}
+        onClose={() => setOpenModalDelete(false)}
+        onDelete={deleteCode}
       />
-      <br />
-      <Button type="submit">Crear código</Button>
-    </form>
+    </>
   );
 };
 

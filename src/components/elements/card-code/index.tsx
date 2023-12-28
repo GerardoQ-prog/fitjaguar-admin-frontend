@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../../ui/button";
 import { getFormattedDate, getHoursAndMinutes } from "../../../utils";
+import { Link } from "react-router-dom";
 
 const CardCode = ({ ...item }) => {
   return (
@@ -13,7 +14,9 @@ const CardCode = ({ ...item }) => {
       <p className="text-center text-sm">
         {getFormattedDate(item.createdAt)} {getHoursAndMinutes(item.createdAt)}
       </p>
-      <Button>Ver detalle</Button>
+      <Link to={`/codigo-activacion/${item._id}`}>
+        <Button>Ver detalle</Button>
+      </Link>
     </div>
   );
 };

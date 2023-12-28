@@ -23,7 +23,7 @@ const Input: React.FC<IInputProps> = ({
     <div className="flex flex-col gap-1 w-full my-2">
       <label className="font-bold">{label}</label>
       <input
-        className={`${className} border-none outline-none rounded-md p-3 font-medium`}
+        className={`${className} border-none outline-none rounded-md p-3 font-medium disabled:opacity-60 disabled:cursor-not-allowed`}
         autoComplete="off"
         id={id}
         {...register(id, rules)}

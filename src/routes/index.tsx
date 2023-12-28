@@ -18,6 +18,7 @@ import NewActivationCodePage from "../pages/new-code";
 import LandingPage from "../pages/landing";
 import RoadSlugPage from "../pages/road-slug";
 import DocumentIdPage from "../pages/document-id";
+import ActivationCodeIdPage from "../pages/activation-code-id";
 
 const AppRoutes = () => {
   const queryClient = new QueryClient({
@@ -53,6 +54,10 @@ const AppRoutes = () => {
             <Route path="/usuarios" element={<UsersPage />} />
             <Route path="/nuevo-usuario" element={<UsersPage />} />
             <Route path="/codigo-activacion" element={<ActivationCodePage />} />
+            <Route
+              path="/codigo-activacion/:id"
+              element={<ActivationCodeIdPage />}
+            />
             <Route path="/nuevo-codigo" element={<NewActivationCodePage />} />
             <Route path="/landing" element={<LandingPage />} />
           </Route>

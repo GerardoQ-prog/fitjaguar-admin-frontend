@@ -21,7 +21,7 @@ const CardVideo = ({ ...item }: any) => {
           <LikeIcon /> {item.likes}
         </div>
       </div> */}
-      <Link to={`/recursos/documento?slug=${item.slug}`}>
+      <Link to={`/recursos/video?slug=${item.slug}`}>
         <Button className="w-full mt-4">Ver detalles</Button>
       </Link>
     </div>

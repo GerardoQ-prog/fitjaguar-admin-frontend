@@ -47,7 +47,7 @@ const FormNewRoad: React.FC<IFormNewRoadProps> = ({ data }) => {
           {
             ...dataForm,
             name: capitalizeFullName(dataForm.name),
-            // slug: convertTextToSlug(dataForm.name),
+            slug: convertTextToSlug(dataForm.name),
             _id: data._id,
           },
           {
@@ -64,7 +64,7 @@ const FormNewRoad: React.FC<IFormNewRoadProps> = ({ data }) => {
         await mutation.mutateAsync({
           ...dataForm,
           name: capitalizeFullName(dataForm.name),
-          // slug: convertTextToSlug(dataForm.name),
+          slug: convertTextToSlug(dataForm.name),
         });
       }
       navigate("/rutas");

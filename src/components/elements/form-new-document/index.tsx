@@ -12,6 +12,9 @@ import { validationFormNewDocument } from "../../../utils/validations/document";
 import InputFile from "../../ui/input-file";
 import { useUpdateDocument } from "../../../domain/hooks/use-update-document";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDeleteDocument } from "../../../domain/hooks/use-delete-document";
+import ModalDelete from "../modal-delete";
+import { useState } from "react";
 
 interface IFormNewDocumentProps {
   data?: any;
@@ -35,6 +38,7 @@ const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
   const { data: dataCoaches } = useGetCoaches();
   const mutation = useCreateNewDocument();
   const mutationUpdate = useUpdateDocument();
+  const mutationDelete = useDeleteDocument();
   const queryClient = useQueryClient();
 
   const {
@@ -57,6 +61,8 @@ const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
       downloads: data.downloads,
     },
   });
+
+  const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
 
   const handleChangePhoto = (base64: string) => {
     setValue("image", base64);
@@ -106,6 +112,15 @@ const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
 
   const handleChangeDescription = (value: any) => {
     setValue("description", value);
+  };
+
+  const deleteDocument = async () => {
+    try {
+      await mutationDelete.mutateAsync(data._id);
+      navigate("/rutas");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -187,13 +202,22 @@ const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
               {id ? "Actualizar documento" : "Crear documento"}
             </Button>
             {id && (
-              <Button className="mt-5 w-full" colors="bg-red-600 text-white">
+              <Button
+                className="mt-5 w-full"
+                colors="bg-red-600 text-white"
+                onClick={() => setOpenModalDelete(true)}
+              >
                 Eliminar documento
               </Button>
             )}
           </div>
         </div>
       </form>
+      <ModalDelete
+        isOpen={openModalDelete}
+        onClose={() => setOpenModalDelete(false)}
+        onDelete={deleteDocument}
+      />
     </>
   );
 };
