@@ -1,10 +1,13 @@
 import FtLogo from "../assets/images/svg/ftgo_logo.svg";
 import BgLogin from "../assets/images/png/background-home.png";
+import FormLogin from "../components/elements/form-login";
 
 const LoginPage = () => {
   return (
-    <div className="p-5">
-      <img src={FtLogo} alt="Fit Jaguar Logo" width={100} />
+    <div>
+      <div className="p-5 h-[100px] flex items-center">
+        <img src={FtLogo} alt="Fit Jaguar Logo" width={150} />
+      </div>
       <div className="relative">
         <img
           src={BgLogin}
@@ -12,7 +15,7 @@ const LoginPage = () => {
           className="w-full object-cover"
           style={{ height: "auto" }}
         />
-        <div>asd</div>
+        <FormLogin />
       </div>
     </div>
   );
