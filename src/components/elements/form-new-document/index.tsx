@@ -30,7 +30,7 @@ type FormNewDocumentValues = {
   pdf: string;
   likes: string;
   downloads: string;
-  comments: [];
+  comments: any[];
 };
 
 const FormNewDocument: React.FC<IFormNewDocumentProps> = ({ data }) => {
