@@ -8,7 +8,7 @@ import CardVideo from "../../elements/card-video";
 const CardsVideos = () => {
   const [videos, setVideos] = useState<any[]>([]);
 
-  const { data, isLoading } = useGetVideos();
+  const { data, isLoading, isFetching } = useGetVideos();
 
   useEffect(() => {
     data && setVideos(data);
@@ -23,11 +23,11 @@ const CardsVideos = () => {
         </Link>
       </div>
       <div className="flex w-full gap-5 flex-wrap">
-        {isLoading && [1, 2, 3, 4, 5].map(() => <SkeletonCardDocument />)}
-
         {videos.map((item: any, index) => (
           <CardVideo key={index} {...item} />
         ))}
+        {(isLoading || isFetching) &&
+          [1, 2, 3, 4, 5].map(() => <SkeletonCardDocument />)}
       </div>
     </div>
   );

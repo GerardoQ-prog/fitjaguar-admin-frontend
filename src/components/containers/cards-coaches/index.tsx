@@ -6,9 +6,7 @@ import SkeletonCardCoach from "../../elements/card-coach/skeleton";
 const CardsCoaches = () => {
   const [coaches, setCoaches] = useState<any[]>([]);
 
-  const { data, isLoading, isPending, isFetching } = useGetCoaches();
-
-  console.log("isLoading", isLoading, isPending, isFetching);
+  const { data, isLoading, isFetching } = useGetCoaches();
 
   useEffect(() => {
     data && setCoaches(data);
@@ -16,11 +14,11 @@ const CardsCoaches = () => {
 
   return (
     <div className="flex w-full gap-x-5 gap-y-4 flex-wrap">
-      {(isLoading || isFetching) &&
-        [1, 2, 3, 4, 5].map(() => <SkeletonCardCoach />)}
       {coaches?.map((item: any, index: number) => (
         <CardCoach key={index} {...item} />
       ))}
+      {(isLoading || isFetching) &&
+        [1, 2, 3, 4, 5].map(() => <SkeletonCardCoach />)}
     </div>
   );
 };

@@ -9,7 +9,7 @@ import SkeletonCardDocument from "../../elements/card-document/skeleton";
 const CardsDocuments = () => {
   const [documents, setDocuments] = useState<any[]>([]);
 
-  const { data, isLoading } = useGetDocuments();
+  const { data, isLoading, isFetching } = useGetDocuments();
 
   useEffect(() => {
     data && setDocuments(data);
@@ -24,11 +24,11 @@ const CardsDocuments = () => {
         </Link>
       </div>
       <div className="flex w-full gap-5 flex-wrap">
-        {isLoading && [1, 2, 3, 4, 5].map(() => <SkeletonCardDocument />)}
-
         {documents.map((item: any, index) => (
           <CardDocument key={index} {...item} />
         ))}
+        {(isLoading || isFetching) &&
+          [1, 2, 3, 4, 5].map(() => <SkeletonCardDocument />)}
       </div>
     </div>
   );

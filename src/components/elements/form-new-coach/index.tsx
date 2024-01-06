@@ -6,8 +6,9 @@ import MoreIcon from "../../ui/icons/more";
 import { useCreateNewCoach } from "../../../domain/hooks/use-create-new-coach";
 import { convertFileToImageBase64 } from "../../../utils";
 import { useGetUserByEmail } from "../../../domain/hooks/use-get-user-by-email";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { validationFormNewCoach } from "../../../utils/validations/coach";
+import InputFile from "../../ui/input-file";
 
 type FormNewCoachValues = {
   name: string;
@@ -27,6 +28,7 @@ const FormNewCoach = () => {
     setValue,
     control,
     clearErrors,
+    watch,
   } = useForm<FormNewCoachValues>({
     mode: "onChange",
   });
@@ -34,34 +36,19 @@ const FormNewCoach = () => {
   const [searchUser, setSearchUser] = useState<boolean>(false);
   const [userExist, setUserExist] = useState<boolean>(false);
 
-  const [formCoach, setFormCoach] = useState({
-    name: "",
-    lastname: "",
-    email: "",
-    password: "",
-    photo: "",
-    typePhoto: "png",
-  });
-
-  const { data, refetch } = useGetUserByEmail({ email: formCoach.email });
+  const { data, refetch } = useGetUserByEmail({ email: watch("email") });
 
   const handleChangePhoto = (base64: string) => {
-    setFormCoach({
-      ...formCoach,
-      photo: base64,
-    });
-  };
-
-  const handleChangeInputFile = (e: any) => {
-    const file = e.target.files[0];
-    convertFileToImageBase64(file, handleChangePhoto);
+    setValue("photo", base64);
   };
 
   const mutation = useCreateNewCoach();
 
-  const createNewCoach = async () => {
+  console.log('watch("email")', watch("email"));
+
+  const createNewCoach: SubmitHandler<FormNewCoachValues> = async (data) => {
     try {
-      await mutation.mutateAsync(formCoach);
+      await mutation.mutateAsync(data);
       navigate("/entrenadores");
     } catch (error) {
       console.log(error);
@@ -73,10 +60,9 @@ const FormNewCoach = () => {
       <form className="flex items-center w-full gap-2">
         <Input
           label="Email"
-          name="email"
           register={register}
           error={errors.email}
-          id="name"
+          id="email"
           rules={validationFormNewCoach.rulesEmail}
         />
         <Button className="w-[40%] mt-7" onClick={() => refetch()}>
@@ -85,53 +71,10 @@ const FormNewCoach = () => {
       </form>
       {!searchUser && (
         <div className="w-full flex gap-10">
-          <div className="w-full">
-            <label className="font-bold">Ingresar foto</label>
-            {formCoach.photo === "" ? (
-              <div className="flex items-center justify-center w-full">
-                <label
-                  htmlFor="dropzone-file"
-                  className="flex flex-col items-center justify-center w-full h-64 border border-white rounded-lg cursor-pointer bg-black-300"
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <MoreIcon />
-                    <p className=" text-white font-bold">Agregar foto</p>
-                  </div>
-                  <input
-                    id="dropzone-file"
-                    type="file"
-                    className="hidden"
-                    onChange={handleChangeInputFile}
-                  />
-                </label>
-              </div>
-            ) : (
-              <div className="w-full">
-                <img
-                  src={formCoach.photo}
-                  alt="Archivo seleccionado"
-                  className="w-[300px] object-contain"
-                />
-                <div className="flex items-center justify-center w-full mt-5">
-                  <label
-                    htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center w-full h-20 border border-white rounded-lg cursor-pointer bg-black-300"
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <MoreIcon />
-                      <p className=" text-white font-bold">Agregar foto</p>
-                    </div>
-                    <input
-                      id="dropzone-file"
-                      type="file"
-                      className="hidden"
-                      onChange={handleChangeInputFile}
-                    />
-                  </label>
-                </div>
-              </div>
-            )}
-          </div>
+          <InputFile
+            image={watch("photo")}
+            handleChangeImage={handleChangePhoto}
+          />
           <div className="w-full">
             <Input
               label="Contraseña"

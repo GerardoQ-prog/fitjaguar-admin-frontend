@@ -6,7 +6,7 @@ import { useGetUsers } from "../../../domain/hooks/user-get-users";
 const CardsUsers = () => {
   const [users, setUsers] = useState<any[]>([]);
 
-  const { data, isLoading, isPending, isFetching } = useGetUsers();
+  const { data, isLoading, isFetching } = useGetUsers();
 
   useEffect(() => {
     data && setUsers(data);
