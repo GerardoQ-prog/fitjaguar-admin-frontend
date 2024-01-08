@@ -2,7 +2,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-const URL = "https://fitjaguar-dev-0c4fb566c3ca.herokuapp.com";
+const URL = "https://fitjaguar-prod-d4986f124e16.herokuapp.com";
 
 const get = async <T>(endpoint: string) => {
   const response = await fetch(URL + endpoint, {
@@ -30,6 +30,15 @@ const put = async <T>(endpoint: string, body: any) => {
   return (await response.json()) as T;
 };
 
+const patch = async <T>(endpoint: string, body: any) => {
+  const response = await fetch(URL + endpoint, {
+    method: "PATCH",
+    headers,
+    body,
+  });
+  return (await response.json()) as T;
+};
+
 const _delete = async <T>(endpoint: string) => {
   const response = await fetch(URL + endpoint, {
     method: "DELETE",
@@ -42,5 +51,6 @@ export const http = {
   get,
   post,
   put,
+  patch,
   delete: _delete,
 };

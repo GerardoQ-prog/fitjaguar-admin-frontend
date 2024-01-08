@@ -14,7 +14,7 @@ const CardCoach = ({ ...item }: any) => {
           {item.name} {item.lastname}
         </p>
         <p className="text-center text-white text-xs font-bold">Entrenador</p>
-        <Link to={"/entrenadores"}>
+        <Link to={`/entrenadores/${item._id}`}>
           <Button className="my-3">Ver información</Button>
         </Link>
       </div>

@@ -5,6 +5,10 @@ export const resourcesRepository = {
     const coaches = await http.get<any[]>("/video");
     return coaches;
   },
+  getVideoById: async (id: String) => {
+    const coaches = await http.get<any[]>(`/video/${id}`);
+    return coaches;
+  },
   createNewVideo: async (newVideo: any) => {
     const response = await http.post("/video", JSON.stringify(newVideo));
     return response;

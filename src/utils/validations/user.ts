@@ -48,7 +48,7 @@ const rulesPassword: RegisterOptions = {
   },
 };
 
-export const validationFormNewCoach = {
+export const validationFormNewUser = {
   rulesName,
   rulesEmail,
   rulesLastname,

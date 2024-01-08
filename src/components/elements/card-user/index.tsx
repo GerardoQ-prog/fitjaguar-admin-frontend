@@ -14,7 +14,7 @@ const CardUser = ({ ...item }: any) => {
           {item.name} {item.lastname}
         </p>
         <p className="text-center text-white text-xs font-bold">Alumno</p>
-        <Link to={"/entrenadores"}>
+        <Link to={`/estudiantes/${item._id}`}>
           <Button className="my-3">Ver información</Button>
         </Link>
       </div>

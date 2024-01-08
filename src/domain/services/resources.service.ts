@@ -4,6 +4,9 @@ export const resourcesService = {
   getVideos: () => {
     return resourcesRepository.getVideos();
   },
+  getVideoById: (id: string) => {
+    return resourcesRepository.getVideoById(id);
+  },
   createNewVideo: (newVideo: any) => {
     const response = resourcesRepository.createNewVideo(newVideo);
     console.log("response", response);

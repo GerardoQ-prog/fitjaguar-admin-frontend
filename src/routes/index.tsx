@@ -19,6 +19,10 @@ import LandingPage from "../pages/landing";
 import RoadSlugPage from "../pages/road-slug";
 import DocumentIdPage from "../pages/document-id";
 import ActivationCodeIdPage from "../pages/activation-code-id";
+import VideoIdPage from "../pages/video-id";
+import NewUserPage from "../pages/new-user";
+import CoachIdPage from "../pages/coach-id";
+import UserIdPage from "../pages/user-id";
 
 const AppRoutes = () => {
   const queryClient = new QueryClient({
@@ -38,12 +42,14 @@ const AppRoutes = () => {
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/entrenadores" element={<CoachesPage />} />
+            <Route path="/entrenadores/:id" element={<CoachIdPage />} />
             <Route path="/nuevo-entrenador" element={<NewCoachPage />} />
             <Route path="/recursos" element={<ResourcesPage />} />
             <Route
               path="/recursos/documento/:id"
               element={<DocumentIdPage />}
             />
+            <Route path="/recursos/video/:id" element={<VideoIdPage />} />
             <Route path="/nuevo-documento" element={<NewDocumentPage />} />
             <Route path="/nuevo-video" element={<NewVideoPage />} />
             <Route path="/rutas" element={<RoadsPage />} />
@@ -51,8 +57,9 @@ const AppRoutes = () => {
             <Route path="/nueva-ruta" element={<NewRoadPage />} />
             <Route path="/cursos" element={<CoursesPage />} />
             <Route path="/nuevo-curso" element={<NewCoursePage />} />
-            <Route path="/usuarios" element={<UsersPage />} />
-            <Route path="/nuevo-usuario" element={<UsersPage />} />
+            <Route path="/estudiantes" element={<UsersPage />} />
+            <Route path="/estudiantes/:id" element={<UserIdPage />} />
+            <Route path="/nuevo-usuario" element={<NewUserPage />} />
             <Route path="/codigo-activacion" element={<ActivationCodePage />} />
             <Route
               path="/codigo-activacion/:id"

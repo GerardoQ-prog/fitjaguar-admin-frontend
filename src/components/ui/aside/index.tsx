@@ -20,11 +20,11 @@ const Aside = () => {
       path: "/dashboard",
     },
     {
-      name: "Usuarios",
+      name: "Estudiantes",
       icon: (
         <FlashIcon
           fill={
-            location.pathname.includes("/usuarios") ||
+            location.pathname.includes("/estudiantes") ||
             location.pathname.includes("/nuevo-usuario")
               ? "#FEC600"
               : "#C6C6C6"
@@ -32,9 +32,9 @@ const Aside = () => {
         />
       ),
       active:
-        location.pathname.includes("/usuarios") ||
+        location.pathname.includes("/estudiantes") ||
         location.pathname.includes("/nuevo-usuario"),
-      path: "/usuarios",
+      path: "/estudiantes",
     },
     {
       name: "Entrenadores",
@@ -60,7 +60,9 @@ const Aside = () => {
           fill={location.pathname.includes("/rutas") ? "#FEC600" : "#C6C6C6"}
         />
       ),
-      active: location.pathname.includes("/rutas"),
+      active:
+        location.pathname.includes("/rutas") ||
+        location.pathname.includes("/nueva-ruta"),
       path: "/rutas",
     },
     {
@@ -79,7 +81,8 @@ const Aside = () => {
         <FlashIcon
           fill={
             location.pathname.includes("/recursos") ||
-            location.pathname.includes("/nuevo-documento")
+            location.pathname.includes("/nuevo-documento") ||
+            location.pathname.includes("/nuevo-video")
               ? "#FEC600"
               : "#C6C6C6"
           }
@@ -87,7 +90,8 @@ const Aside = () => {
       ),
       active:
         location.pathname.includes("/recursos") ||
-        location.pathname.includes("/nuevo-documento"),
+        location.pathname.includes("/nuevo-documento") ||
+        location.pathname.includes("/nuevo-video"),
       path: "/recursos",
     },
     {
